@@ -5,6 +5,9 @@
     <meta name="viewport" content="initial-scale=1.0,user-scalable=no" />
     <title>Example Settings</title>
     <style>
+      html {
+        background: #fff;
+      }
       body {
         font-family: 'Open Sans',Helvetica,Arial,sans-serif;
         font-size: smaller;
@@ -15,17 +18,25 @@
   <body>
   <h1>localStorage bug</h1>
 
-  <div>
-    <p>Page loaded at:</p>
-    <p id="pageLoadTime"></p>
-  </div>
+  <p>
+    localStorage on the Pebble Android app has become unreliable. Try editing this value and backing out of the settings page (either
+    by pressing the back arrow on the nav bar, or by using the "Close settings through pebblejs://" button) and notice upon reopening settings
+    that it sometimes does not persist.
+  </p>
 
   <div>
+    <!-- <h2>Example setting</h2> -->
     <label for="slider">Value: <span id="slider-value">5</span></label>
-    <input type="range" id="slider" name="slider" min="0" max="10" value="5" oninput="document.getElementById('slider-value').textContent = this.value;">
+    <input style="margin: 2em; width: 50%;" type="range" id="slider" name="slider" min="0" max="100" value="0" oninput="document.getElementById('slider-value').textContent = this.value;">
   </div>
 
   <button onclick="sendConfig()">Close settings through pebblejs://</button>
+
+
+  <div style="margin-top: 3em">
+    <p><small><strong>Page loaded at</strong></small></p>
+    <small id="pageLoadTime"></small>
+  </div>
 
   <script>
     // Load slider value from localStorage on page load
@@ -58,7 +69,7 @@
     }
     function sendConfig() {
       console.log('Closing through pebblejs://');
-      
+
       var return_to = getQueryParam('return_to', 'pebblejs://close#');
       document.location = return_to + encodeURIComponent(JSON.stringify({ closed: true }));
       return false;
