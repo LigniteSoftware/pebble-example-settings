@@ -16,26 +16,35 @@
     </style>
   </head>
   <body>
-  <h1>localStorage bug</h1>
+  <h1>Pebble Settings Bug</h1>
 
+  <h2>What is going on?</h2>
   <p>
-    localStorage on the Pebble Android app has become unreliable. Try editing this value and backing out of the settings page (either
-    by pressing the back arrow on the nav bar, or by using the "Close settings through pebblejs://" button) and notice upon reopening settings
-    that it sometimes does not persist.
+    Something to do with the stateful nature of settings pages on the Pebble Android app has become unreliable.
   </p>
-
+  <p>
+    Try editing this value and backing out of the settings page, either by pressing the back arrow on the nav bar, 
+    or by using the "Close settings through pebblejs://" button and notice what happens upon reopening settings.
+  </p>
+  <p>
+    Repeat this process a few times, and notice how upon reopening settings the value of the slider changes (the slider 
+    is simply loading its value through localStorage when the page opens).
+  </p>
+  <hr/>
   <div>
-    <!-- <h2>Example setting</h2> -->
-    <label for="slider">Value: <span id="slider-value">5</span></label>
-    <input style="margin: 2em; width: 50%;" type="range" id="slider" name="slider" min="0" max="100" value="0" oninput="document.getElementById('slider-value').textContent = this.value;">
+    <h2>Example setting</h2>
+    <p for="slider">Value: <span id="slider-value">5</span></p>
+    <input style="margin-bottom: 2em; width: 50%;" type="range" id="slider" name="slider" min="0" max="100" value="0" oninput="document.getElementById('slider-value').textContent = this.value;">
   </div>
+  <button onclick="sendConfig()" style="margin-bottom: 1em">Close settings through pebblejs://</button>
+  <hr/>
 
-  <button onclick="sendConfig()">Close settings through pebblejs://</button>
 
-
-  <div style="margin-top: 3em">
-    <p><small><strong>Page loaded at</strong></small></p>
+  <div style="margin-top: 0.5em">
+    <p><small><strong>DOMContentLoaded at</strong></small></p>
     <small id="pageLoadTime"></small>
+    <p><small><strong>localStorage restored value</strong></small></p>
+    <small id="restoredValue"></small>
   </div>
 
   <script>
@@ -47,6 +56,11 @@
       if (storedValue !== null) {
         slider.value = storedValue;
         sliderValueSpan.textContent = storedValue;
+
+        document.getElementById('restoredValue').innerHTML = storedValue;
+      }
+      else{
+        document.getElementById('restoredValue').innerHTML = 'undefined';
       }
       slider.addEventListener('input', function() {
         localStorage.setItem('sliderValue', this.value);
